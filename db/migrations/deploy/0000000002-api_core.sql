@@ -72,11 +72,6 @@ ALTER TABLE task  ENABLE ROW LEVEL SECURITY;
 
 DROP VIEW todos;
 
-CREATE TRIGGER comments_mutation
-	INSTEAD OF INSERT OR UPDATE OR DELETE ON comments
-	FOR EACH ROW
-	EXECUTE PROCEDURE util.mutation_comments_view();
-
 CREATE VIEW clients AS
 	SELECT client.id,
     client.name,
@@ -109,6 +104,11 @@ UNION
    FROM data.task_comment;
 REVOKE ALL ON TABLE comments FROM webuser;
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE comments TO webuser;
+
+CREATE TRIGGER comments_mutation
+	INSTEAD OF INSERT OR UPDATE OR DELETE ON comments
+	FOR EACH ROW
+	EXECUTE PROCEDURE util.mutation_comments_view();
 
 CREATE VIEW projects AS
 	SELECT project.id,
