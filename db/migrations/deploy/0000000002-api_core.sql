@@ -148,8 +148,8 @@ CREATE SEQUENCE client_id_seq
 	NO MAXVALUE
 	NO MINVALUE
 	CACHE 1;
-REVOKE ALL ON TABLE client_id_seq FROM webuser;
-GRANT USAGE ON TABLE client_id_seq TO webuser;
+REVOKE ALL ON SEQUENCE client_id_seq FROM webuser;
+GRANT USAGE ON SEQUENCE client_id_seq TO webuser;
 
 CREATE SEQUENCE project_comment_id_seq
 	START WITH 1
@@ -157,8 +157,8 @@ CREATE SEQUENCE project_comment_id_seq
 	NO MAXVALUE
 	NO MINVALUE
 	CACHE 1;
-REVOKE ALL ON TABLE project_comment_id_seq FROM webuser;
-GRANT USAGE ON TABLE project_comment_id_seq TO webuser;
+REVOKE ALL ON SEQUENCE project_comment_id_seq FROM webuser;
+GRANT USAGE ON SEQUENCE project_comment_id_seq TO webuser;
 
 CREATE SEQUENCE project_id_seq
 	START WITH 1
@@ -166,8 +166,8 @@ CREATE SEQUENCE project_id_seq
 	NO MAXVALUE
 	NO MINVALUE
 	CACHE 1;
-REVOKE ALL ON TABLE project_id_seq FROM webuser;
-GRANT USAGE ON TABLE project_id_seq TO webuser;
+REVOKE ALL ON SEQUENCE project_id_seq FROM webuser;
+GRANT USAGE ON SEQUENCE project_id_seq TO webuser;
 
 CREATE SEQUENCE task_comment_id_seq
 	START WITH 1
@@ -175,8 +175,8 @@ CREATE SEQUENCE task_comment_id_seq
 	NO MAXVALUE
 	NO MINVALUE
 	CACHE 1;
-REVOKE ALL ON TABLE task_comment_id_seq FROM webuser;
-GRANT USAGE ON TABLE task_comment_id_seq TO webuser;
+REVOKE ALL ON SEQUENCE task_comment_id_seq FROM webuser;
+GRANT USAGE ON SEQUENCE task_comment_id_seq TO webuser;
 
 CREATE SEQUENCE task_id_seq
 	START WITH 1
@@ -184,8 +184,8 @@ CREATE SEQUENCE task_id_seq
 	NO MAXVALUE
 	NO MINVALUE
 	CACHE 1;
-REVOKE ALL ON TABLE task_id_seq FROM webuser;
-GRANT USAGE ON TABLE task_id_seq TO webuser;
+REVOKE ALL ON SEQUENCE task_id_seq FROM webuser;
+GRANT USAGE ON SEQUENCE task_id_seq TO webuser;
 
 ALTER SEQUENCE client_id_seq
 	OWNED BY client.id;
