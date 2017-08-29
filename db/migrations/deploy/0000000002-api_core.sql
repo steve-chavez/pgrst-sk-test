@@ -5,7 +5,7 @@ CREATE SCHEMA util;
 SET search_path = api, pg_catalog;
 
 CREATE TABLE client (
-	id integer DEFAULT nextval('client_id_seq'::regclass) NOT NULL,
+	id integer NOT NULL,
 	name text NOT NULL,
 	address text,
 	user_id integer DEFAULT request.user_id() NOT NULL,
@@ -18,7 +18,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE client TO api;
 ALTER TABLE client  ENABLE ROW LEVEL SECURITY;
 
 CREATE TABLE project_comment (
-	id integer DEFAULT nextval('project_comment_id_seq'::regclass) NOT NULL,
+	id integer NOT NULL,
 	body text NOT NULL,
 	project_id integer NOT NULL,
 	user_id integer DEFAULT request.user_id() NOT NULL,
@@ -31,7 +31,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE project_comment TO api;
 ALTER TABLE project_comment  ENABLE ROW LEVEL SECURITY;
 
 CREATE TABLE task_comment (
-	id integer DEFAULT nextval('task_comment_id_seq'::regclass) NOT NULL,
+	id integer NOT NULL,
 	body text NOT NULL,
 	task_id integer NOT NULL,
 	user_id integer DEFAULT request.user_id() NOT NULL,
@@ -44,7 +44,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE task_comment TO api;
 ALTER TABLE task_comment  ENABLE ROW LEVEL SECURITY;
 
 CREATE TABLE project (
-	id integer DEFAULT nextval('project_id_seq'::regclass) NOT NULL,
+	id integer NOT NULL,
 	name text NOT NULL,
 	client_id integer NOT NULL,
 	user_id integer DEFAULT request.user_id() NOT NULL,
@@ -57,7 +57,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE project TO api;
 ALTER TABLE project  ENABLE ROW LEVEL SECURITY;
 
 CREATE TABLE task (
-	id integer DEFAULT nextval('task_id_seq'::regclass) NOT NULL,
+	id integer NOT NULL,
 	name text NOT NULL,
 	completed boolean DEFAULT false NOT NULL,
 	project_id integer NOT NULL,
