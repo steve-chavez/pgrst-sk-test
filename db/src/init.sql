@@ -26,6 +26,8 @@ begin;
 -- functions for sending messages to RabbitMQ entities
 \ir libs/rabbitmq/schema.sql
 
+\ir libs/util/schema.sql
+
 -- save app settings
 select settings.set('jwt_secret', :quoted_jwt_secret);
 select settings.set('jwt_lifetime', '3600');

@@ -34,3 +34,54 @@ ALTER SEQUENCE data.todo_id_seq RESTART WITH 7;
 -- analyze modified tables
 ANALYZE data.user;
 ANALYZE data.todo;
+
+set search_path = data, public;
+\echo # filling table client (3)
+COPY client (id,name,address,user_id,created_on,updated_on) FROM STDIN (FREEZE ON);
+1	Apple	address_1_	1	2017-07-18 11:31:12	\N
+2	Microsoft	address_1_	1	2017-07-18 11:31:12	\N
+3	Amazon	address_1_	2	2017-07-18 11:31:12	\N
+\.
+
+\echo # filling table project (4)
+COPY project (id,name,client_id,user_id,created_on,updated_on) FROM STDIN (FREEZE ON);
+1	MacOS	1	1	2017-07-18 11:31:12	\N
+2	Windows	2	1	2017-07-18 11:31:12	\N
+3	IOS	1	1	2017-07-18 11:31:12	\N
+4	Office	2	1	2017-07-18 11:31:12	\N
+\.
+
+\echo # filling table task (5)
+COPY task (id,name,completed,project_id,user_id,created_on,updated_on) FROM STDIN (FREEZE ON);
+1	Design a nice UI	TRUE	1	1	2017-07-18 11:31:12	\N
+2	Write some OS code	FALSE	1	1	2017-07-18 11:31:12	\N
+3	Start aggressive marketing	TRUE	2	1	2017-07-18 11:31:12	\N
+4	Get everybody to love it	TRUE	3	1	2017-07-18 11:31:12	\N
+5	Move everything to cloud	TRUE	4	1	2017-07-18 11:31:12	\N
+\.
+
+\echo # filling table project_comment (2)
+COPY project_comment (id,body,project_id,user_id,created_on,updated_on) FROM STDIN (FREEZE ON);
+1	This is going to be awesome	1	1	2017-07-18 11:31:12	\N
+2	We still have the marketshare, we should keep it that way  	2	1	2017-07-18 11:31:12	\N
+\.
+
+\echo # filling table task_comment (2)
+COPY task_comment (id,body,task_id,user_id,created_on,updated_on) FROM STDIN (FREEZE ON);
+1	Arn't we awesome?	1	1	2017-07-18 11:31:12	\N
+2	People are going to love the free automated install when they see it in the morning	3	1	2017-07-18 11:31:12	\N
+\.
+
+-- 
+ALTER SEQUENCE client_id_seq RESTART WITH 4;
+ALTER SEQUENCE project_id_seq RESTART WITH 5;
+ALTER SEQUENCE task_id_seq RESTART WITH 6;
+ALTER SEQUENCE project_comment_id_seq RESTART WITH 3;
+ALTER SEQUENCE task_comment_id_seq RESTART WITH 3;
+
+-- 
+ANALYZE client;
+ANALYZE project;
+ANALYZE task;
+ANALYZE project_comment;
+ANALYZE task_comment;

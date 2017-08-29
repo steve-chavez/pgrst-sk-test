@@ -2,3 +2,4 @@
 %project=app
 
 0000000001-initial 2017-08-25T17:30:30Z stevebash <stevebash@ArchHome> # Add 0000000001-initial migration
+0000000002-api_core 2017-08-29T04:26:35Z stevebash <stevebash@ArchHome> # complete api core tutorial

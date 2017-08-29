@@ -46,3 +46,47 @@ grant select, insert, update, delete on api.todos to webuser;
 -- anonymous users can only request specific columns from this view
 grant select (id, todo) on api.todos to anonymous;
 -------------------------------------------------------------------------------
+grant select, insert, update, delete 
+on api.clients, api.projects, api.tasks, api.comments
+to webuser;
+
+set search_path = data, public;
+
+alter table client enable row level security;
+grant select, insert, update, delete on client to api;
+create policy access_own_rows on client to api
+using ( request.user_role() = 'webuser' and request.user_id() = user_id )
+with check ( request.user_role() = 'webuser' and request.user_id() = user_id);
+
+
+alter table project enable row level security;
+grant select, insert, update, delete on project to api;
+create policy access_own_rows on project to api
+using ( request.user_role() = 'webuser' and request.user_id() = user_id )
+with check ( request.user_role() = 'webuser' and request.user_id() = user_id);
+
+
+alter table task enable row level security;
+grant select, insert, update, delete on task to api;
+create policy access_own_rows on task to api
+using ( request.user_role() = 'webuser' and request.user_id() = user_id )
+with check ( request.user_role() = 'webuser' and request.user_id() = user_id);
+
+
+alter table project_comment enable row level security;
+grant select, insert, update, delete on project_comment to api;
+create policy access_own_rows on project_comment to api
+using ( request.user_role() = 'webuser' and request.user_id() = user_id )
+with check ( request.user_role() = 'webuser' and request.user_id() = user_id);
+
+alter table task_comment enable row level security;
+grant select, insert, update, delete on task_comment to api;
+create policy access_own_rows on task_comment to api
+using ( request.user_role() = 'webuser' and request.user_id() = user_id )
+with check ( request.user_role() = 'webuser' and request.user_id() = user_id);
+
+grant usage on sequence data.client_id_seq to webuser;
+grant usage on sequence data.project_id_seq to webuser;
+grant usage on sequence data.task_id_seq to webuser;
+grant usage on sequence data.task_comment_id_seq to webuser;
+grant usage on sequence data.project_comment_id_seq to webuser;
