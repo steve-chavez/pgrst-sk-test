@@ -2,7 +2,7 @@ START TRANSACTION;
 
 CREATE SCHEMA util;
 
-SET search_path = api, pg_catalog;
+SET search_path = data, pg_catalog;
 
 CREATE TABLE client (
 	id integer NOT NULL,
@@ -69,78 +69,6 @@ CREATE TABLE task (
 REVOKE ALL ON TABLE task FROM api;
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE task TO api;
 ALTER TABLE task  ENABLE ROW LEVEL SECURITY;
-
-DROP VIEW todos;
-
-CREATE VIEW clients AS
-	SELECT client.id,
-    client.name,
-    client.address,
-    client.created_on,
-    client.updated_on
-   FROM data.client;
-REVOKE ALL ON TABLE clients FROM webuser;
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE clients TO webuser;
-
-CREATE VIEW comments AS
-	SELECT project_comment.id,
-    project_comment.body,
-    'project'::text AS parent_type,
-    project_comment.project_id AS parent_id,
-    project_comment.project_id,
-    NULL::integer AS task_id,
-    project_comment.created_on,
-    project_comment.updated_on
-   FROM data.project_comment
-UNION
- SELECT task_comment.id,
-    task_comment.body,
-    'task'::text AS parent_type,
-    task_comment.task_id AS parent_id,
-    NULL::integer AS project_id,
-    task_comment.task_id,
-    task_comment.created_on,
-    task_comment.updated_on
-   FROM data.task_comment;
-REVOKE ALL ON TABLE comments FROM webuser;
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE comments TO webuser;
-
-CREATE TRIGGER comments_mutation
-	INSTEAD OF INSERT OR UPDATE OR DELETE ON comments
-	FOR EACH ROW
-	EXECUTE PROCEDURE util.mutation_comments_view();
-
-CREATE VIEW projects AS
-	SELECT project.id,
-    project.name,
-    project.client_id,
-    project.created_on,
-    project.updated_on
-   FROM data.project;
-REVOKE ALL ON TABLE projects FROM webuser;
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE projects TO webuser;
-
-CREATE VIEW tasks AS
-	SELECT task.id,
-    task.name,
-    task.completed,
-    task.project_id,
-    task.created_on,
-    task.updated_on
-   FROM data.task;
-REVOKE ALL ON TABLE tasks FROM webuser;
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE tasks TO webuser;
-
-CREATE VIEW todos AS
-	SELECT todo.id,
-    todo.todo,
-    todo.private,
-    (todo.owner_id = request.user_id()) AS mine
-   FROM data.todo;
-REVOKE ALL ON TABLE todos FROM webuser;
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE todos TO webuser;
-
-SET search_path = data, pg_catalog;
 
 CREATE SEQUENCE client_id_seq
 	START WITH 1
@@ -336,6 +264,78 @@ USING (
 WITH CHECK (
   ((request.user_role() = 'webuser'::text) AND (request.user_id() = user_id))
 );
+
+SET search_path = api, pg_catalog;
+
+DROP VIEW todos;
+
+CREATE VIEW clients AS
+	SELECT client.id,
+    client.name,
+    client.address,
+    client.created_on,
+    client.updated_on
+   FROM data.client;
+REVOKE ALL ON TABLE clients FROM webuser;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE clients TO webuser;
+
+CREATE VIEW comments AS
+	SELECT project_comment.id,
+    project_comment.body,
+    'project'::text AS parent_type,
+    project_comment.project_id AS parent_id,
+    project_comment.project_id,
+    NULL::integer AS task_id,
+    project_comment.created_on,
+    project_comment.updated_on
+   FROM data.project_comment
+UNION
+ SELECT task_comment.id,
+    task_comment.body,
+    'task'::text AS parent_type,
+    task_comment.task_id AS parent_id,
+    NULL::integer AS project_id,
+    task_comment.task_id,
+    task_comment.created_on,
+    task_comment.updated_on
+   FROM data.task_comment;
+REVOKE ALL ON TABLE comments FROM webuser;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE comments TO webuser;
+
+CREATE TRIGGER comments_mutation
+	INSTEAD OF INSERT OR UPDATE OR DELETE ON comments
+	FOR EACH ROW
+	EXECUTE PROCEDURE util.mutation_comments_view();
+
+CREATE VIEW projects AS
+	SELECT project.id,
+    project.name,
+    project.client_id,
+    project.created_on,
+    project.updated_on
+   FROM data.project;
+REVOKE ALL ON TABLE projects FROM webuser;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE projects TO webuser;
+
+CREATE VIEW tasks AS
+	SELECT task.id,
+    task.name,
+    task.completed,
+    task.project_id,
+    task.created_on,
+    task.updated_on
+   FROM data.task;
+REVOKE ALL ON TABLE tasks FROM webuser;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE tasks TO webuser;
+
+CREATE VIEW todos AS
+	SELECT todo.id,
+    todo.todo,
+    todo.private,
+    (todo.owner_id = request.user_id()) AS mine
+   FROM data.todo;
+REVOKE ALL ON TABLE todos FROM webuser;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE todos TO webuser;
 
 SET search_path = util, pg_catalog;
 
