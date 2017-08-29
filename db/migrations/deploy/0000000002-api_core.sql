@@ -4,6 +4,51 @@ CREATE SCHEMA util;
 
 SET search_path = api, pg_catalog;
 
+CREATE SEQUENCE project_comment_id_seq
+	START WITH 1
+	INCREMENT BY 1
+	NO MAXVALUE
+	NO MINVALUE
+	CACHE 1;
+REVOKE ALL ON SEQUENCE project_comment_id_seq FROM webuser;
+GRANT USAGE ON SEQUENCE project_comment_id_seq TO webuser;
+
+CREATE SEQUENCE project_id_seq
+	START WITH 1
+	INCREMENT BY 1
+	NO MAXVALUE
+	NO MINVALUE
+	CACHE 1;
+REVOKE ALL ON SEQUENCE project_id_seq FROM webuser;
+GRANT USAGE ON SEQUENCE project_id_seq TO webuser;
+
+CREATE SEQUENCE task_comment_id_seq
+	START WITH 1
+	INCREMENT BY 1
+	NO MAXVALUE
+	NO MINVALUE
+	CACHE 1;
+REVOKE ALL ON SEQUENCE task_comment_id_seq FROM webuser;
+GRANT USAGE ON SEQUENCE task_comment_id_seq TO webuser;
+
+CREATE SEQUENCE task_id_seq
+	START WITH 1
+	INCREMENT BY 1
+	NO MAXVALUE
+	NO MINVALUE
+	CACHE 1;
+REVOKE ALL ON SEQUENCE task_id_seq FROM webuser;
+GRANT USAGE ON SEQUENCE task_id_seq TO webuser;
+
+CREATE SEQUENCE client_id_seq
+	START WITH 1
+	INCREMENT BY 1
+	NO MAXVALUE
+	NO MINVALUE
+	CACHE 1;
+REVOKE ALL ON SEQUENCE client_id_seq FROM webuser;
+GRANT USAGE ON SEQUENCE client_id_seq TO webuser;
+
 CREATE TABLE client (
 	id integer DEFAULT nextval('client_id_seq'::regclass) NOT NULL,
 	name text NOT NULL,
@@ -69,6 +114,21 @@ CREATE TABLE task (
 REVOKE ALL ON TABLE task FROM api;
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE task TO api;
 ALTER TABLE task  ENABLE ROW LEVEL SECURITY;
+
+ALTER SEQUENCE client_id_seq
+	OWNED BY client.id;
+
+ALTER SEQUENCE project_comment_id_seq
+	OWNED BY project_comment.id;
+
+ALTER SEQUENCE project_id_seq
+	OWNED BY project.id;
+
+ALTER SEQUENCE task_comment_id_seq
+	OWNED BY task_comment.id;
+
+ALTER SEQUENCE task_id_seq
+	OWNED BY task.id;
 
 DROP VIEW todos;
 
@@ -141,66 +201,6 @@ REVOKE ALL ON TABLE todos FROM webuser;
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE todos TO webuser;
 
 SET search_path = data, pg_catalog;
-
-CREATE SEQUENCE client_id_seq
-	START WITH 1
-	INCREMENT BY 1
-	NO MAXVALUE
-	NO MINVALUE
-	CACHE 1;
-REVOKE ALL ON SEQUENCE client_id_seq FROM webuser;
-GRANT USAGE ON SEQUENCE client_id_seq TO webuser;
-
-CREATE SEQUENCE project_comment_id_seq
-	START WITH 1
-	INCREMENT BY 1
-	NO MAXVALUE
-	NO MINVALUE
-	CACHE 1;
-REVOKE ALL ON SEQUENCE project_comment_id_seq FROM webuser;
-GRANT USAGE ON SEQUENCE project_comment_id_seq TO webuser;
-
-CREATE SEQUENCE project_id_seq
-	START WITH 1
-	INCREMENT BY 1
-	NO MAXVALUE
-	NO MINVALUE
-	CACHE 1;
-REVOKE ALL ON SEQUENCE project_id_seq FROM webuser;
-GRANT USAGE ON SEQUENCE project_id_seq TO webuser;
-
-CREATE SEQUENCE task_comment_id_seq
-	START WITH 1
-	INCREMENT BY 1
-	NO MAXVALUE
-	NO MINVALUE
-	CACHE 1;
-REVOKE ALL ON SEQUENCE task_comment_id_seq FROM webuser;
-GRANT USAGE ON SEQUENCE task_comment_id_seq TO webuser;
-
-CREATE SEQUENCE task_id_seq
-	START WITH 1
-	INCREMENT BY 1
-	NO MAXVALUE
-	NO MINVALUE
-	CACHE 1;
-REVOKE ALL ON SEQUENCE task_id_seq FROM webuser;
-GRANT USAGE ON SEQUENCE task_id_seq TO webuser;
-
-ALTER SEQUENCE client_id_seq
-	OWNED BY client.id;
-
-ALTER SEQUENCE project_comment_id_seq
-	OWNED BY project_comment.id;
-
-ALTER SEQUENCE project_id_seq
-	OWNED BY project.id;
-
-ALTER SEQUENCE task_comment_id_seq
-	OWNED BY task_comment.id;
-
-ALTER SEQUENCE task_id_seq
-	OWNED BY task.id;
 
 ALTER TABLE client
 	ADD CONSTRAINT client_pkey PRIMARY KEY (id);
