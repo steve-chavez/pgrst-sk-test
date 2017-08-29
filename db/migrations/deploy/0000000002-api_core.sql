@@ -4,6 +4,72 @@ CREATE SCHEMA util;
 
 SET search_path = api, pg_catalog;
 
+CREATE TABLE client (
+	id integer DEFAULT nextval('client_id_seq'::regclass) NOT NULL,
+	name text NOT NULL,
+	address text,
+	user_id integer DEFAULT request.user_id() NOT NULL,
+	created_on timestamp with time zone DEFAULT now() NOT NULL,
+	updated_on timestamp with time zone
+);
+
+REVOKE ALL ON TABLE client FROM api;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE client TO api;
+ALTER TABLE client  ENABLE ROW LEVEL SECURITY;
+
+CREATE TABLE project_comment (
+	id integer DEFAULT nextval('project_comment_id_seq'::regclass) NOT NULL,
+	body text NOT NULL,
+	project_id integer NOT NULL,
+	user_id integer DEFAULT request.user_id() NOT NULL,
+	created_on timestamp with time zone DEFAULT now() NOT NULL,
+	updated_on timestamp with time zone
+);
+
+REVOKE ALL ON TABLE project_comment FROM api;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE project_comment TO api;
+ALTER TABLE project_comment  ENABLE ROW LEVEL SECURITY;
+
+CREATE TABLE task_comment (
+	id integer DEFAULT nextval('task_comment_id_seq'::regclass) NOT NULL,
+	body text NOT NULL,
+	task_id integer NOT NULL,
+	user_id integer DEFAULT request.user_id() NOT NULL,
+	created_on timestamp with time zone DEFAULT now() NOT NULL,
+	updated_on timestamp with time zone
+);
+
+REVOKE ALL ON TABLE task_comment FROM api;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE task_comment TO api;
+ALTER TABLE task_comment  ENABLE ROW LEVEL SECURITY;
+
+CREATE TABLE project (
+	id integer DEFAULT nextval('project_id_seq'::regclass) NOT NULL,
+	name text NOT NULL,
+	client_id integer NOT NULL,
+	user_id integer DEFAULT request.user_id() NOT NULL,
+	created_on timestamp with time zone DEFAULT now() NOT NULL,
+	updated_on timestamp with time zone
+);
+
+REVOKE ALL ON TABLE project FROM api;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE project TO api;
+ALTER TABLE project  ENABLE ROW LEVEL SECURITY;
+
+CREATE TABLE task (
+	id integer DEFAULT nextval('task_id_seq'::regclass) NOT NULL,
+	name text NOT NULL,
+	completed boolean DEFAULT false NOT NULL,
+	project_id integer NOT NULL,
+	user_id integer DEFAULT request.user_id() NOT NULL,
+	created_on timestamp with time zone DEFAULT now() NOT NULL,
+	updated_on timestamp with time zone
+);
+
+REVOKE ALL ON TABLE task FROM api;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE task TO api;
+ALTER TABLE task  ENABLE ROW LEVEL SECURITY;
+
 DROP VIEW todos;
 
 CREATE TRIGGER comments_mutation
@@ -120,72 +186,6 @@ CREATE SEQUENCE task_id_seq
 	CACHE 1;
 REVOKE ALL ON TABLE task_id_seq FROM webuser;
 GRANT USAGE ON TABLE task_id_seq TO webuser;
-
-CREATE TABLE client (
-	id integer DEFAULT nextval('client_id_seq'::regclass) NOT NULL,
-	name text NOT NULL,
-	address text,
-	user_id integer DEFAULT request.user_id() NOT NULL,
-	created_on timestamp with time zone DEFAULT now() NOT NULL,
-	updated_on timestamp with time zone
-);
-
-REVOKE ALL ON TABLE client FROM api;
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE client TO api;
-ALTER TABLE client  ENABLE ROW LEVEL SECURITY;
-
-CREATE TABLE project_comment (
-	id integer DEFAULT nextval('project_comment_id_seq'::regclass) NOT NULL,
-	body text NOT NULL,
-	project_id integer NOT NULL,
-	user_id integer DEFAULT request.user_id() NOT NULL,
-	created_on timestamp with time zone DEFAULT now() NOT NULL,
-	updated_on timestamp with time zone
-);
-
-REVOKE ALL ON TABLE project_comment FROM api;
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE project_comment TO api;
-ALTER TABLE project_comment  ENABLE ROW LEVEL SECURITY;
-
-CREATE TABLE task_comment (
-	id integer DEFAULT nextval('task_comment_id_seq'::regclass) NOT NULL,
-	body text NOT NULL,
-	task_id integer NOT NULL,
-	user_id integer DEFAULT request.user_id() NOT NULL,
-	created_on timestamp with time zone DEFAULT now() NOT NULL,
-	updated_on timestamp with time zone
-);
-
-REVOKE ALL ON TABLE task_comment FROM api;
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE task_comment TO api;
-ALTER TABLE task_comment  ENABLE ROW LEVEL SECURITY;
-
-CREATE TABLE project (
-	id integer DEFAULT nextval('project_id_seq'::regclass) NOT NULL,
-	name text NOT NULL,
-	client_id integer NOT NULL,
-	user_id integer DEFAULT request.user_id() NOT NULL,
-	created_on timestamp with time zone DEFAULT now() NOT NULL,
-	updated_on timestamp with time zone
-);
-
-REVOKE ALL ON TABLE project FROM api;
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE project TO api;
-ALTER TABLE project  ENABLE ROW LEVEL SECURITY;
-
-CREATE TABLE task (
-	id integer DEFAULT nextval('task_id_seq'::regclass) NOT NULL,
-	name text NOT NULL,
-	completed boolean DEFAULT false NOT NULL,
-	project_id integer NOT NULL,
-	user_id integer DEFAULT request.user_id() NOT NULL,
-	created_on timestamp with time zone DEFAULT now() NOT NULL,
-	updated_on timestamp with time zone
-);
-
-REVOKE ALL ON TABLE task FROM api;
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE task TO api;
-ALTER TABLE task  ENABLE ROW LEVEL SECURITY;
 
 ALTER SEQUENCE client_id_seq
 	OWNED BY client.id;
